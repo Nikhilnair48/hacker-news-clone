@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { getNews } from "./actions";
 
-import logo from "./logo.svg";
+import { getNews } from "./actions";
 import { Container, Pagination } from "./App.styles.js";
 import Table from "./components/Table";
 import Chart from "./components/Chart";
+import { useParams } from "react-router-dom";
+
+import logo from "./logo.svg";
 
 const App = ({ getNews }) => {
-  const [pageNumber, setPageNumber] = useState(0);
-
+  const urlParams = useParams();
+  const [pageNumber, setPageNumber] = useState(urlParams.pageNumber || 0);
   const fetchNews = async () => {
     console.log("in fetchNews");
     const data = await getNews(pageNumber);
