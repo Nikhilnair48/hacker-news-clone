@@ -5,12 +5,20 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import configureStore from "./store";
 import { Provider } from "react-redux";
+import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 
 const store = configureStore();
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Router>
+      <div>
+        <Switch>
+          <Route path="/:pageNumber" children={<App />} />
+          <Route path="/" children={<App />} />
+        </Switch>
+      </div>
+    </Router>
   </Provider>,
   document.getElementById("root")
 );
