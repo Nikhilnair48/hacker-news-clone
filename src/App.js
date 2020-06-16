@@ -1,26 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { getNews } from "./actions";
+
 import logo from "./logo.svg";
-import "./App.css";
+import { Container, Pagination } from "./App.styles.js";
+import Table from "./components/Table";
+import Chart from "./components/Chart";
 
-function App() {
+const App = ({ getNews }) => {
+  const [pageNumber, setPageNumber] = useState(0);
+
+  const fetchNews = async () => {
+    console.log("in fetchNews");
+    const data = await getNews(pageNumber);
+    console.log(data);
+    console.log("leaving fetchNews");
+  };
+
+  useEffect(() => {
+    console.log("in useeffect");
+    fetchNews();
+  }, [pageNumber]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Table
+        nextPage={() => setPageNumber(pageNumber - 1)}
+        previousPage={() => setPageNumber(pageNumber + 1)}
+      />
+      <Pagination>
+        <a onClick={() => setPageNumber(pageNumber - 1)}>Previous</a>
+        <span> | </span>
+        <a onClick={() => setPageNumber(pageNumber + 1)}>Next</a>
+      </Pagination>
+      <Chart />
+    </Container>
   );
-}
+};
 
-export default App;
+const mapStateToProps = ({ news }) => ({
+  news
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getNews: (pageNumber) => dispatch(getNews(pageNumber))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
