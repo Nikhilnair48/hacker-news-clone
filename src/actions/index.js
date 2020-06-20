@@ -30,4 +30,29 @@ const upVoteError = (error) => ({
   payload: error
 });
 
-export { getNews, setNews, getNewsError, upVote, setUpvote, upVoteError };
+const hideStory = (storyId) => ({
+  type: atypes.SET_HIDE_REQUEST,
+  payload: storyId
+});
+
+const hideStorySuccess = (story) => ({
+  type: atypes.SET_HIDE_SUCCESS,
+  payload: story
+});
+
+const hideStoryError = (error) => ({
+  type: atypes.SET_HIDE_FAILURE,
+  payload: error
+});
+
+export {
+  getNews,
+  setNews,
+  getNewsError,
+  upVote,
+  setUpvote,
+  upVoteError,
+  hideStory,
+  hideStorySuccess,
+  hideStoryError
+};

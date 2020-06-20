@@ -4,14 +4,16 @@ import { connect } from "react-redux";
 import { getNews } from "./actions";
 import { Container, Pagination } from "./App.styles.js";
 import Table from "./components/Table";
-import Chart from "./components/Chart";
+import PlotChart from "./components/Chart";
 import { useParams } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 
 import logo from "./logo.svg";
 
 const App = ({ getNews }) => {
   const urlParams = useParams();
-  const [pageNumber, setPageNumber] = useState(urlParams.pageNumber || 0);
+  const [pageNumber, setPageNumber] = useState(0);
+
   const fetchNews = async () => {
     console.log("in fetchNews");
     const data = await getNews(pageNumber);
@@ -20,28 +22,39 @@ const App = ({ getNews }) => {
   };
 
   useEffect(() => {
+    console.log("in url param effect");
+    console.log(urlParams);
+    if (urlParams.pageNumber && parseInt(urlParams.pageNumber) !== pageNumber) {
+      const pageNum = parseInt(urlParams.pageNumber);
+      console.log("setting to " + pageNum);
+      setPageNumber(pageNum);
+    } else {
+      setPageNumber(0);
+    }
+  }, [urlParams]);
+
+  useEffect(() => {
     console.log("in useeffect");
     fetchNews();
   }, [pageNumber]);
 
   return (
     <Container>
-      <Table
-        nextPage={() => setPageNumber(pageNumber - 1)}
-        previousPage={() => setPageNumber(pageNumber + 1)}
-      />
+      <Table />
       <Pagination>
-        <a onClick={() => setPageNumber(pageNumber - 1)}>Previous</a>
+        <Link to={"/" + (pageNumber === 1 ? "" : parseInt(pageNumber - 1))}>
+          Previous
+        </Link>
         <span> | </span>
-        <a onClick={() => setPageNumber(pageNumber + 1)}>Next</a>
+        <Link to={"/" + parseInt(pageNumber + 1)}>Next</Link>
       </Pagination>
-      <Chart />
+      <PlotChart />
     </Container>
   );
 };
 
-const mapStateToProps = ({ news }) => ({
-  news
+const mapStateToProps = ({ stories }) => ({
+  stories
 });
 
 const mapDispatchToProps = (dispatch) => ({
