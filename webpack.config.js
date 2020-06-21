@@ -9,7 +9,7 @@ module.exports = {
   },
   entry: {
     polyfill: "babel-polyfill",
-    app: "./src/index.js"
+    app: "./dist/app.bundle.js"
   },
   module: {
     rules: [
